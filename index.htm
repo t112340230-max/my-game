@@ -16,6 +16,7 @@
     --dim:#7a7069;
   }
   *{box-sizing:border-box}
+  html,body{overscroll-behavior:none; -webkit-tap-highlight-color:transparent}
   body{
     margin:0; overflow:hidden; background:var(--ink); cursor:crosshair;
     font-family:"Yu Mincho","Hiragino Mincho ProN","Noto Serif TC","Songti TC",serif;
@@ -199,6 +200,38 @@
     #t-panel{width:100%; height:66%; padding:18px 20px 28px}
     #t-stage{width:100%; height:34%; padding:0 0 10px 20px}
     #ts-stats{display:none}
+  }
+  /* 橫向手機：高度很矮（約 390px），直向那套版面完全擠不下，改成左右分欄 */
+  @media (max-height:520px) and (orientation:landscape){
+    #title{align-items:stretch}
+    #t-stage{width:34%; height:100%; padding:14px 0 10px 16px}
+    #t-panel{width:66%; height:100%; padding:12px 16px 20px}
+    #ts-stats{display:block}
+    #ts-name{font-size:22px} #ts-el{font-size:11px} #ts-core{font-size:11px}
+    #ts-hp{font-size:12px; margin-top:6px} #ts-gear{font-size:10px}
+    .tab{padding:8px 2px; font-size:11px; letter-spacing:.12em}
+    .pick-label{margin-top:12px; font-size:11px; letter-spacing:.24em}
+    #t-go{margin-top:14px; padding:12px; font-size:13px}
+    .cls,.skin,.wep,.gcb{font-size:12px; padding:9px 10px}
+    #class-hint,#skin-hint,#wep-hint,#helm-hint,#armor-hint,#diff-hint,#pet-hint{
+      font-size:11px; line-height:1.7; margin-top:6px}
+    #t-how,#t-how2{font-size:11.5px; line-height:1.75}
+    #t-main{font-size:24px} #t-sub{font-size:9px; margin-bottom:5px}
+    #t-rule{margin:9px 0}
+    #gc-souls{font-size:15px; margin-top:8px}
+    #gc-result{min-height:44px; font-size:14px; padding:9px; margin-top:10px}
+    #gc-info{font-size:10.5px; line-height:1.7; margin-top:7px}
+    #gc-myth{padding:11px; font-size:12px; margin-top:8px}
+    #pm-box{padding:18px 24px; min-width:260px}
+    #pm-title{font-size:20px; margin-bottom:3px}
+    #pm-info{font-size:10.5px; margin-bottom:10px; line-height:1.7}
+    .pm-btn{padding:9px; font-size:12px; margin:5px 0}
+  }
+  /* 觸控裝置上把所有可點元素放大到好按的尺寸 */
+  @media (hover:none) and (pointer:coarse){
+    .cls,.skin,.wep,.gcb,.dbg,.vtog{min-height:42px}
+    .tab{min-height:40px}
+    #t-go{min-height:48px}
   }
   #t-sub{font-size:10px; letter-spacing:.9em; color:var(--shu); margin-bottom:10px}
   #t-main{font-size:clamp(28px,3.6vw,46px); letter-spacing:.14em; line-height:1; color:var(--bone); margin:0;
@@ -397,11 +430,50 @@
   #tbtns button:active{background:rgba(224,58,32,.34); border-color:var(--shu)}
   #tbtns button[data-a="light"]{background:rgba(224,58,32,.2); border-color:#7a2a20}
   #tbtns button[data-a="q"]{border-color:#6b4c1a; color:var(--kin)}
+
+  /* 左側副鍵：技能與回復 */
+  #tsub{position:absolute; left:18px; bottom:170px; display:flex; flex-direction:column; gap:10px;
+        pointer-events:auto}
+  #tsub button{position:relative; width:60px; height:60px; border-radius:50%; font-family:inherit;
+               color:var(--bone); background:rgba(20,14,16,.66); border:1px solid #46383c;
+               touch-action:none; overflow:hidden; padding:0}
+  #tsub button b{font-size:19px; font-weight:600; letter-spacing:.06em; position:relative}
+  #tsub button i{position:absolute; left:0; bottom:0; width:100%; background:rgba(0,0,0,.62);
+                 height:0%; transition:height .12s; pointer-events:none}
+  #tsub button:active{background:rgba(57,215,255,.28); border-color:var(--ao)}
+  #tsub button.off{opacity:.38}
+  #tsub button[data-a="heal"]{border-color:#2e6a4a; color:#7fe8b0}
+  #tsub button[data-a="heal"]:active{background:rgba(127,232,176,.26); border-color:#7fe8b0}
+
+  #tpause{position:absolute; right:16px; top:14px; width:46px; height:46px; border-radius:50%;
+          font-family:inherit; font-size:18px; color:var(--bone); background:rgba(20,14,16,.6);
+          border:1px solid #46383c; pointer-events:auto; touch-action:none}
+
+  /* 直向閘門：直向畫面玩不了，直接擋下來並說明 */
+  #rotate-gate{position:fixed; inset:0; z-index:40; display:none; background:#0a0708;
+               align-items:center; justify-content:center; text-align:center; padding:40px}
+  #rotate-gate.on{display:flex}
+  #rg-icon{font-size:64px; color:var(--kin); margin-bottom:18px}
+  #rotate-gate h3{font-family:'Noto Serif TC',serif; font-size:26px; font-weight:700;
+                  letter-spacing:.3em; color:var(--bone); margin:0 0 12px}
+  #rotate-gate p{font-size:15px; letter-spacing:.1em; color:#8a8079; margin:0; line-height:1.9}
   @media (max-width:900px){
     #moves{display:none}
     #vitals{width:190px; left:16px; bottom:auto; top:14px}
-    #rank{right:14px; top:10px} #rank-letter{font-size:42px} #rank-meter,#combo-bar{width:104px}
+    #rank{right:70px; top:10px} #rank-letter{font-size:42px} #rank-meter,#combo-bar{width:104px}
     #wave{top:auto; bottom:14px}
+    #obj-row{font-size:11px; padding:4px 10px; letter-spacing:.1em}
+    #toast{font-size:14px; padding:9px 16px; bottom:200px}
+    .float{font-size:19px}
+    #boss-name{font-size:14px; letter-spacing:.3em}
+  }
+  /* 瀏海與底部手勢列：避開不可觸碰區 */
+  @supports (padding:env(safe-area-inset-left)){
+    #stick{left:calc(22px + env(safe-area-inset-left))}
+    #tsub{left:calc(18px + env(safe-area-inset-left))}
+    #tbtns{right:calc(14px + env(safe-area-inset-right)); bottom:calc(14px + env(safe-area-inset-bottom))}
+    #tpause{right:calc(16px + env(safe-area-inset-right))}
+    #vitals{left:calc(16px + env(safe-area-inset-left))}
   }
   @media (prefers-reduced-motion: reduce){ *{transition-duration:.01ms !important; animation-duration:.01ms !important} }
 </style>
@@ -508,11 +580,23 @@
 
 <div id="touch">
   <div id="stick"><div id="knob"></div></div>
+  <!-- 左側副鍵：技能與回復。先前手機上完全按不到 E/R/C，等於半套能力用不了 -->
+  <div id="tsub">
+    <button data-a="wave"><b>技</b><i id="tc-wave"></i></button>
+    <button data-a="cut"><b>奧</b><i id="tc-cut"></i></button>
+    <button data-a="heal"><b>藥</b><i id="tc-heal"></i></button>
+  </div>
   <div id="tbtns">
     <button data-a="dodge">閃</button><button data-a="heavy">重</button><button data-a="q">龍</button>
     <button data-a="guard">架</button><button data-a="light">斬</button><button data-a="exec">殺</button>
   </div>
+  <button id="tpause">॥</button>
 </div>
+<div id="rotate-gate"><div>
+  <div id="rg-icon">⟳</div>
+  <h3>請 橫 置 手 機</h3>
+  <p>這款遊戲需要橫向畫面才能正常遊玩</p>
+</div></div>
 
 <div id="title">
   <div id="t-stage">
@@ -2227,6 +2311,20 @@ function setupTouch(){
   stick.addEventListener('touchend',endS,{passive:false});
   stick.addEventListener('touchcancel',endS,{passive:false});
 
+  /* 左側副鍵：技能與回復 */
+  for(const b of document.getElementById('tsub').children){
+    const act=b.getAttribute('data-a');
+    b.addEventListener('touchstart',ev=>{
+      ev.preventDefault(); SFX.resume();
+      if(paused||gameOver||TIME.cinema) return;
+      if(act==='heal') drinkGourd();
+      else queue(act);
+      buzz(12);
+    },{passive:false});
+  }
+  const tp=document.getElementById('tpause');
+  if(tp) tp.addEventListener('touchstart',ev=>{ ev.preventDefault(); SFX.resume(); togglePause(); },{passive:false});
+
   for(const b of document.getElementById('tbtns').children){
     const act=b.getAttribute('data-a');
     b.addEventListener('touchstart',ev=>{
@@ -2236,6 +2334,7 @@ function setupTouch(){
       else if(act==='q') dragonKey();
       else if(act==='heavy'){ if(canAct()){ P.charging=true; P.chargeT=0; P.chargeReady=false; } }
       else queue(act);
+      buzz(act==='q'?40:12);
     },{passive:false});
     b.addEventListener('touchend',ev=>{
       ev.preventDefault();
@@ -2248,6 +2347,32 @@ function setupTouch(){
     },{passive:false});
   }
 }
+/* 震動回饋：手機上少了鍵盤的實體回饋，這個補得回來一部分 */
+function buzz(ms){
+  if(!TOUCH.on || !navigator.vibrate) return;
+  try{ navigator.vibrate(ms); }catch(e){}
+}
+/* 直向畫面玩不了，偵測到就擋下並暫停 */
+function checkOrientation(){
+  if(!TOUCH.on) return;
+  const portrait = innerHeight > innerWidth;
+  const g=document.getElementById('rotate-gate');
+  if(!g) return;
+  g.classList.toggle('on', portrait);
+  if(portrait && started && !paused && !gameOver) togglePause();
+}
+/* 進入遊戲時嘗試全螢幕並維持螢幕喚醒 */
+function goFullscreen(){
+  if(!TOUCH.on) return;
+  const el=document.documentElement;
+  try{ (el.requestFullscreen||el.webkitRequestFullscreen||(()=>{})).call(el); }catch(e){}
+  try{
+    if(navigator.wakeLock && !WAKE.lock)
+      navigator.wakeLock.request('screen').then(l=>{ WAKE.lock=l; }).catch(()=>{});
+  }catch(e){}
+}
+const WAKE={lock:null};
+
 function nearestEnemy(maxD){
   let best=null, bd=maxD||34;
   for(const e of enemies){
@@ -2267,10 +2392,13 @@ function init(){
   scene.fog=new THREE.FogExp2(0x2e2130, 0.0075);
 
   camera=new THREE.PerspectiveCamera(44, innerWidth/innerHeight, 0.1, 400);
-  const lowEnd = innerWidth<900 || (navigator.hardwareConcurrency||8)<=4;
+  // 手機的像素量遠小於桌機但 GPU 也弱得多；用觸控與核心數一起判斷
+  const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints||0)>0;
+  const lowEnd = isTouch || innerWidth<900 || (navigator.hardwareConcurrency||8)<=4;
   window.__lowEnd=lowEnd;
   renderer=new THREE.WebGLRenderer({antialias:!lowEnd, powerPreference:'high-performance'});
-  renderer.setPixelRatio(Math.min(devicePixelRatio, lowEnd?1.5:2));
+  // 手機的 devicePixelRatio 常是 3，照單全收等於算三倍像素，發熱又掉幀
+  renderer.setPixelRatio(Math.min(devicePixelRatio, lowEnd?1.25:2));
   renderer.setSize(innerWidth, innerHeight);
   renderer.outputEncoding=THREE.sRGBEncoding;
   document.body.appendChild(renderer.domElement);
@@ -2314,6 +2442,15 @@ function init(){
   sub('視角設定', ()=>{ loadView(); bindViewUI(); syncViewUI(); });
   sub('暫停選單', ()=>bindPauseMenu());
   sub('觸控支援', ()=>setupTouch());
+  sub('螢幕方向', ()=>{
+    checkOrientation();
+    addEventListener('orientationchange', ()=>setTimeout(checkOrientation,120));
+    addEventListener('resize', checkOrientation);
+    document.addEventListener('visibilitychange', ()=>{
+      if(document.hidden && started && !paused && !gameOver) togglePause();
+      else if(!document.hidden && WAKE.lock===null) goFullscreen();
+    });
+  });
   if(window.__subFail && window.__subFail.length){
     setTimeout(()=>toast('部分特效系統停用：'+window.__subFail.join('、'), 4), 1200);
   }
@@ -4626,6 +4763,7 @@ function startGame(){
   if(started) return;
   started=true;
   P.hpMax=120+SK().hp+CLS().hp; P.hp=P.hpMax;
+  if(TOUCH.on){ goFullscreen(); buzz(30); }
   P.startT=globalTime; P.dmgTaken=0; P.lastHitBy='';
   P.gourd=P.gourdMax; P.gourdKills=0; P.rally=0; P.rallyT=0;
   document.getElementById('title').classList.add('gone');
@@ -6686,6 +6824,7 @@ function applyDamage(d){
   Game.streak=0;
   if(P.hurtCd>0 && d<20) d*=0.5;
   P.hp-=d; P.hurtCd=0.25;
+  buzz(Math.min(60, 14+d*1.1));                 // 受傷：越痛震越久
   addRally(d);                          // 必須在扣血之後：回生上限取決於已失去的血量
   RANK.pts=Math.max(0, RANK.pts-70);   // 挨打直接掉評價
   shakeAdd(3.5);
@@ -6806,6 +6945,7 @@ function onPerfectDodge(){
   }
 }
 function onParry(fromPos, src){
+  buzz([0,30,40,30]);                            // 彈反成功：短促的雙擊手感
   SFX.parry(); impactCA(0.009);
   shockwave(playerGroup.position.clone().setY(2.4), 1.5, .5);
   impactFrame(1.0);
@@ -9620,6 +9760,23 @@ function syncUI(){
     if(uiCache.gprog) uiCache.gprog.style.width=Math.min(100,(P.gourdKills/14)*100)+'%';
   }
 
+  // 觸控副鍵：用遮罩高度顯示「還差多少氣」，瓶數不足就整顆變暗
+  if(TOUCH.on && uiCache.tsubT!==undefined){}
+  if(TOUCH.on){
+    const kc=SK().kiCost||1, dm=P.dragon>0;
+    const need=a2=>(a2==='wave'?CLS().eKi:CLS().rKi)*kc*(dm?0.5:1);
+    const set=(id,ratio,off)=>{
+      const el=document.getElementById(id); if(!el) return;
+      el.style.height=Math.round(clamp(1-ratio,0,1)*100)+'%';
+      const b2=el.parentElement;
+      if(b2) b2.classList.toggle('off', !!off);
+    };
+    const nw=need('wave'), nc=need('cut');
+    set('tc-wave', P.ki/Math.max(1,nw), P.ki<nw);
+    set('tc-cut',  P.ki/Math.max(1,nc), P.ki<nc);
+    set('tc-heal', P.gourd/Math.max(1,P.gourdMax), P.gourd<=0 || P.hp>=P.hpMax*0.995);
+  }
+
   if(uiCache.souls!==SOULS){
     uiCache.souls=SOULS;
     const se=document.getElementById('souls-hud');
@@ -9759,4 +9916,5 @@ if(typeof THREE==='undefined'){
 }
 </script>
 </body>
+</html>
 </html>
